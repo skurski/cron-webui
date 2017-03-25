@@ -1,0 +1,51 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cron WebUI</title>
+    <link rel="stylesheet" th:href="@{/style.css}"></link>
+</head>
+
+<body>
+<div class="container">
+<h2>See your crontab file</h2>
+<div class="display">
+    <p th:if="${crontab.content}" th:text="${crontab.content}">Description</p>
+</div>
+<hr/>
+
+<h3>Add a cron job</h3>
+<form method="POST">
+    <label for="script">Script to execute:</label><br/>
+        <textarea name="script" cols="80" rows="10"></textarea><br/>
+    <label for="minute">Minute:</label>
+    <input type="text" name="minute" size="10" th:value="0"></input>
+    &nbsp;(0-59)<br/>
+    <label for="hour">Hour:</label>
+    <input type="text" name="hour" size="10" th:value="0"></input>
+    &nbsp;(0-23)<br/>
+    <label for="dayOfMonth">Day of month:</label>
+    <input type="text" name="dayOfMonth" size="10" th:value="0"></input>
+    &nbsp;(1-31)<br/>
+    <label for="month">Month:</label>
+    <input type="text" name="month" size="10" th:value="0"></input>
+    &nbsp;(1-12)<br/>
+    <label for="dayOfWeek">Day of week:</label>
+    <input type="text" name="dayOfWeek" size="10" th:value="0"></input>
+    &nbsp;(0-6)<br/>
+
+    <p>If you choose cron annotation the above configuration will be ignored!</p>
+    <label for="special">Special cron annotation: </label>
+    <select name="special">
+        <option value="" th:disabled="disabled"
+                th:selected="selected">Choose your option</option>
+        <option th:each="state : ${T(com.skurski.cron.model.Special).values()}"
+                th:value="${state}"
+                th:text="${state}">
+        </option>
+    </select>
+    <br/><br/>
+
+    <input type="submit"></input>
+</form>
+</div>
+</body>
+</html>
