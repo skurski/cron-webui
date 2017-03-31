@@ -7,39 +7,60 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 @Service
 public class CronService {
 
     private static final String CRONTAB_LIST = "crontab -l";
+    private static final String CRON_CRONTAB_TXT = "cron/crontab.txt";
+    private static final String CRON_RESET_TXT = "cron/reset.txt";
+    private static final String CRONTAB = "crontab ";
 
-    public Crontab getCrontab() {
-        return new Crontab(executeShellCommand(CRONTAB_LIST));
+    public List<String> getCrontab() {
+        List<String> cronJobs = new ArrayList<>();
+        String content = executeShellCommand(CRONTAB_LIST);
+
+        for (int i = 0, j = 0; i < content.length(); i++) {
+            char c = content.charAt(i);
+            if (c == '\n') {
+                cronJobs.add(content.substring(j, i));
+                j = i + 1;
+            }
+        }
+
+        return cronJobs;
     }
 
     public void addCronJob(Cron cron) {
         Function<Cron, String> converter = (cronJob) -> {
             StringBuilder sb = new StringBuilder();
-            if (cronJob.getScript().isEmpty()) {
+            if (cronJob.isEmpty()) {
                 // todo: inform client that no script to execute
                 return sb.toString();
             }
-            if (cronJob.getSpecial().isPresent()) {
-                sb.append(cronJob.getSpecial().get().getParameter());
-                sb.append(" ");
-                sb.append(cronJob.getScript());
-                return sb.toString();
+            System.out.println("cronjob: " + cronJob);
+
+            if (cronJob.isSpecial()) {
+                return sb.append(cronJob.getSpecialWithScript()).toString();
             }
-            //todo: implement cron job without annotation ( * * * * * )
-            return "";
+
+            return sb.append(cronJob.getParamsWithScript()).toString();
         };
 
         String cronJob = converter.apply(cron);
-        StringUtil.appendToFile("cron/crontab.txt", cronJob);
-        //todo: refactor path
-        executeShellCommand("crontab /home/psk/IdeaProjects/cron-webui/target/classes/cron/crontab.txt");
+        File file = StringUtil.appendToFile(CRON_CRONTAB_TXT, cronJob);
+        executeShellCommand(CRONTAB + file.getAbsolutePath());
+    }
+
+    public void resetCrontab() {
+        File file = StringUtil.getFile(CRON_RESET_TXT);
+        executeShellCommand(CRONTAB + file.getAbsolutePath());
+        StringUtil.resetFile(CRON_CRONTAB_TXT);
     }
 
     private String executeShellCommand(String command) {

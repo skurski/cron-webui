@@ -8,15 +8,15 @@ import java.util.Optional;
 */
 public class Cron {
 
-    private String script;
+    private String script = "";
 
-    private Optional<Special> special;
+    private Optional<Special> special = Optional.empty();
 
-    private int minute;
-    private int hour;
-    private int dayOfMonth;
-    private int month;
-    private int dayOfWeek;
+    private String minute = "*";
+    private String hour = "*";
+    private String dayOfMonth = "*";
+    private String month = "*";
+    private String dayOfWeek = "*";
 
     public String getScript() {
         return script;
@@ -34,44 +34,60 @@ public class Cron {
         this.special = special;
     }
 
-    public int getMinute() {
+    public String getMinute() {
         return minute;
     }
 
-    public void setMinute(int minute) {
+    public void setMinute(String minute) {
         this.minute = minute;
     }
 
-    public int getHour() {
+    public String getHour() {
         return hour;
     }
 
-    public void setHour(int hour) {
+    public void setHour(String hour) {
         this.hour = hour;
     }
 
-    public int getDayOfMonth() {
+    public String getDayOfMonth() {
         return dayOfMonth;
     }
 
-    public void setDayOfMonth(int dayOfMonth) {
+    public void setDayOfMonth(String dayOfMonth) {
         this.dayOfMonth = dayOfMonth;
     }
 
-    public int getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(int month) {
+    public void setMonth(String month) {
         this.month = month;
     }
 
-    public int getDayOfWeek() {
+    public String getDayOfWeek() {
         return dayOfWeek;
     }
 
-    public void setDayOfWeek(int dayOfWeek) {
+    public void setDayOfWeek(String dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getParamsWithScript() {
+        return minute + " " + hour + " " + dayOfMonth + " " + month + " " + dayOfWeek + " " + script;
+    }
+
+    public boolean isSpecial() {
+        return special.isPresent();
+    }
+
+    public boolean isEmpty() {
+        return script.isEmpty();
+    }
+
+    public String getSpecialWithScript() {
+        return special.get().getParameter() + " " + script;
     }
 
     @Override

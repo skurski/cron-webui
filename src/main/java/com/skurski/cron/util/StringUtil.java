@@ -5,6 +5,11 @@ import java.io.*;
 
 public class StringUtil {
 
+    public static File getFile(String filePath) {
+        ClassLoader classLoader = StringUtil.class.getClassLoader();
+        return  new File(classLoader.getResource(filePath).getFile());
+    }
+
     public static String read(String filePath) {
         ClassLoader classLoader = StringUtil.class.getClassLoader();
         File file = new File(classLoader.getResource(filePath).getFile());
@@ -27,7 +32,7 @@ public class StringUtil {
         return null;
     }
 
-    public static void appendToFile(String filePath, String content) {
+    public static File appendToFile(String filePath, String content) {
         ClassLoader classLoader = StringUtil.class.getClassLoader();
         File file = new File(classLoader.getResource(filePath).getFile());
 
@@ -35,8 +40,22 @@ public class StringUtil {
             bw.write(content);
             bw.write('\n');
             System.out.println("Cron job wrote to file successfully, filename: "  + file.getAbsolutePath());
+            return file;
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static void resetFile(String filePath) {
+        ClassLoader classLoader = StringUtil.class.getClassLoader();
+        File file = new File(classLoader.getResource(filePath).getFile());
+
+        try(PrintWriter pw = new PrintWriter(file);) {
+            System.out.println("Reset crontab file: " + file.getAbsolutePath());
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }

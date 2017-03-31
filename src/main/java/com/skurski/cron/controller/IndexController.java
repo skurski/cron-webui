@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/")
 public class IndexController {
@@ -18,7 +20,7 @@ public class IndexController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
-        Crontab crontab = cronService.getCrontab();
+        List<String> crontab = cronService.getCrontab();
         model.addAttribute("crontab", crontab);
         return "index";
     }
@@ -26,10 +28,15 @@ public class IndexController {
     @RequestMapping(method = RequestMethod.POST)
     public String saveCronJob(Cron cron) {
         System.out.println(cron);
-
         //todo: validation
         cronService.addCronJob(cron);
 
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "reset", method = RequestMethod.POST)
+    public String resetCrontab() {
+        cronService.resetCrontab();
         return "redirect:/";
     }
 }

@@ -8,7 +8,19 @@
 <div class="container">
 <h2>See your crontab file</h2>
 <div class="display">
-    <p th:if="${crontab.content}" th:text="${crontab.content}">Description</p>
+    <div th:if="${#lists.isEmpty(crontab)}">
+        <p>Your crontab file is empty. Nothing to show.</p>
+    </div>
+    <div th:if="${not #lists.isEmpty(crontab)}">
+        <div th:each="job : ${crontab}">
+            <p th:text="${job}">Description</p>
+        </div>
+    </div>
+    <div>
+        <form th:action="@{/reset}" method="post">
+            <input type="submit" value="Reset crontab"/>
+        </form>
+    </div>
 </div>
 <hr/>
 
@@ -17,19 +29,19 @@
     <label for="script">Script to execute:</label><br/>
         <textarea name="script" cols="80" rows="10"></textarea><br/>
     <label for="minute">Minute:</label>
-    <input type="text" name="minute" size="10" th:value="0"></input>
+    <input type="text" name="minute" size="10" value="*"></input>
     &nbsp;(0-59)<br/>
     <label for="hour">Hour:</label>
-    <input type="text" name="hour" size="10" th:value="0"></input>
+    <input type="text" name="hour" size="10" value="*"></input>
     &nbsp;(0-23)<br/>
     <label for="dayOfMonth">Day of month:</label>
-    <input type="text" name="dayOfMonth" size="10" th:value="0"></input>
+    <input type="text" name="dayOfMonth" size="10" value="*"></input>
     &nbsp;(1-31)<br/>
     <label for="month">Month:</label>
-    <input type="text" name="month" size="10" th:value="0"></input>
+    <input type="text" name="month" size="10" value="*"></input>
     &nbsp;(1-12)<br/>
     <label for="dayOfWeek">Day of week:</label>
-    <input type="text" name="dayOfWeek" size="10" th:value="0"></input>
+    <input type="text" name="dayOfWeek" size="10" value="*"></input>
     &nbsp;(0-6)<br/>
 
     <p>If you choose cron annotation the above configuration will be ignored!</p>
