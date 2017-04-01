@@ -1,6 +1,7 @@
 package com.skurski.cron.controller;
 
 import com.skurski.cron.model.Cron;
+import com.skurski.cron.model.CronDto;
 import com.skurski.cron.model.Crontab;
 import com.skurski.cron.service.CronService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ public class IndexController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(Model model) {
-        List<String> crontab = cronService.getCrontab();
+//        List<String> crontab = cronService.getCrontab();
+        List<CronDto> crontab = cronService.getCrontab();
         model.addAttribute("crontab", crontab);
         return "index";
     }
@@ -30,12 +32,17 @@ public class IndexController {
         System.out.println(cron);
         //todo: validation
         cronService.addCronJob(cron);
-
         return "redirect:/";
     }
 
     @RequestMapping(value = "reset", method = RequestMethod.POST)
     public String resetCrontab() {
+        cronService.resetCrontab();
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public String removeCronJob() {
         cronService.resetCrontab();
         return "redirect:/";
     }

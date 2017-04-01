@@ -12,9 +12,21 @@
         <p>Your crontab file is empty. Nothing to show.</p>
     </div>
     <div th:if="${not #lists.isEmpty(crontab)}">
-        <div th:each="job : ${crontab}">
-            <p th:text="${job}">Description</p>
-        </div>
+        <table>
+            <tbody th:each="job : ${crontab}">
+                <tr>
+                    <td>
+                        <p th:text="${job.row}">Description</p>
+                    </td>
+                    <td>
+                        <form th:action="@{/remove}" method="post">
+                            <input type="hidden" name="jobId" th:value="${job.id}"/>
+                            <input type="submit" value="Remove job"/>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div>
         <form th:action="@{/reset}" method="post">

@@ -1,6 +1,7 @@
 package com.skurski.cron.service;
 
 import com.skurski.cron.model.Cron;
+import com.skurski.cron.model.CronDto;
 import com.skurski.cron.model.Crontab;
 import com.skurski.cron.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,14 @@ public class CronService {
     private static final String CRON_RESET_TXT = "cron/reset.txt";
     private static final String CRONTAB = "crontab ";
 
-    public List<String> getCrontab() {
-        List<String> cronJobs = new ArrayList<>();
+    public List<CronDto> getCrontab() {
+        List<CronDto> cronJobs = new ArrayList<>();
         String content = executeShellCommand(CRONTAB_LIST);
 
         for (int i = 0, j = 0; i < content.length(); i++) {
             char c = content.charAt(i);
             if (c == '\n') {
-                cronJobs.add(content.substring(j, i));
+                cronJobs.add(new CronDto(content.substring(j, i)));
                 j = i + 1;
             }
         }
@@ -61,6 +62,10 @@ public class CronService {
         File file = StringUtil.getFile(CRON_RESET_TXT);
         executeShellCommand(CRONTAB + file.getAbsolutePath());
         StringUtil.resetFile(CRON_CRONTAB_TXT);
+    }
+
+    public void removeCronJob() {
+        // todo: implement
     }
 
     private String executeShellCommand(String command) {
