@@ -65,7 +65,7 @@
                             <option value="" th:disabled="disabled"
                                     th:selected="selected">Choose your option
                             </option>
-                            <option th:each="state : ${T(com.skurski.expertCron.model.Special).values()}"
+                            <option th:each="state : ${T(com.skurski.cron.model.Special).values()}"
                                     th:value="${state}"
                                     th:text="${state}">
                             </option>
