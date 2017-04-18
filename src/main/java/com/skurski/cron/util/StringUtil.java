@@ -39,7 +39,24 @@ public class StringUtil {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             bw.write(content);
             bw.write('\n');
-            System.out.println("Cron job wrote to file successfully, filename: "  + file.getAbsolutePath());
+            System.out.println("ExpertCron job wrote to file successfully, filename: "  + file.getAbsolutePath());
+            return file;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static File putToFile(String filePath, String content) {
+        ClassLoader classLoader = StringUtil.class.getClassLoader();
+        File file = new File(classLoader.getResource(filePath).getFile());
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, false))) {
+            bw.write(content);
+            bw.write('\n');
+            System.out.println("ExpertCron job wrote to file successfully, filename: "  + file.getAbsolutePath());
             return file;
 
         } catch (IOException e) {
@@ -58,5 +75,20 @@ public class StringUtil {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String remove(String content, String toRemove) {
+        int substringStart = content.indexOf(toRemove);
+        StringBuilder sb = new StringBuilder();
+
+        if (substringStart == 0) {
+            sb.append(content.substring(toRemove.length()+1)); // +1 to remove \n
+        } else {
+            sb.append(content.substring(0, substringStart-1));
+            int next = substringStart + toRemove.length() -1;
+            sb.append(content.substring(next));
+        }
+
+        return sb.toString().trim();
     }
 }

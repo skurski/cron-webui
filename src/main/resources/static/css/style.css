@@ -1,0 +1,22 @@
+body {
+    padding-top: 60px;
+}
+
+.index-list {
+    padding-top: 20px;
+}
+
+.hour-option {
+    padding-left: 20px;
+}
+
+.annotation {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+footer {
+    margin-top: 20px;
+    border-top: 1px solid #e8e8e8;
+    padding-top: 10px;
+}

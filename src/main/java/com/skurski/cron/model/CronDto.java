@@ -8,6 +8,8 @@ public class CronDto {
 
     private static int counter = 0;
 
+    public CronDto() {}
+
     public CronDto(String row) {
         this.id = counter++;
         this.row = row;
@@ -19,14 +21,6 @@ public class CronDto {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public static int getCounter() {
-        return counter;
-    }
-
-    public static void setCounter(int counter) {
-        CronDto.counter = counter;
     }
 
     public String getRow() {

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head lang="en">
+    <!--/*/ <th:block th:include="index :: head"></th:block> /*/-->
+    <title>Cron Job Scheduler - Expert UI</title>
+    <!--/*/ <th:block th:include="index :: scripts"></th:block> /*/-->
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}">Cron Web Interface</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Cron Job Scheduler - Expert UI</h3>
+            <form method="POST">
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <label for="script">Script to execute:</label><br/>
+                        <textarea class="form-control" name="script" cols="80" rows="20annotation"></textarea><br/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label for="minute">Minute (0-59):</label>
+                        <input type="text" class="form-control" name="minute" size="10" value="*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label for="hour">Hour (0-23):</label>
+                        <input type="text" class="form-control" name="hour" size="10" value="*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label for="dayOfMonth">Day of month (1-31):</label>
+                        <input type="text" class="form-control" name="dayOfMonth" size="10" value="*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label for="month">Month (1-12):</label>
+                        <input type="text" class="form-control" name="month" size="10" value="*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label for="dayOfWeek">Day of week (0-6):</label>
+                        <input type="text" class="form-control" name="dayOfWeek" size="10" value="*"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 annotation">
+                        <label for="special">Special expertCron annotation (ignore above): </label>
+                        <select class="form-control" name="special">
+                            <option value="" th:disabled="disabled"
+                                    th:selected="selected">Choose your option
+                            </option>
+                            <option th:each="state : ${T(com.skurski.expertCron.model.Special).values()}"
+                                    th:value="${state}"
+                                    th:text="${state}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <input type="submit" class="btn btn-success"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer th:fragment="footer">
+        <p>Piotr Skurski &copy; 2016 Cron Web Interface - ASK</p>
+    </footer>
+
+</div> <!-- /container -->
+
+</body>
+</html>

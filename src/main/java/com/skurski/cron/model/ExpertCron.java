@@ -6,7 +6,7 @@ import java.util.Optional;
     # Minute   Hour   Day of Month       Month          Day of Week
     # (0-59)  (0-23)     (1-31)         (1-12)            (0-6)
 */
-public class Cron {
+public class ExpertCron {
 
     private String script = "";
 
@@ -92,7 +92,7 @@ public class Cron {
 
     @Override
     public String toString() {
-        return "Cron{" +
+        return "ExpertCron{" +
                 "script='" + script + '\'' +
                 ", special=" + special +
                 ", minute=" + minute +

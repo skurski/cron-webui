@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head lang="en">
+    <!--/*/ <th:block th:include="index :: head"></th:block> /*/-->
+    <title>Cron Job Scheduler - Friendly UI</title>
+    <!--/*/ <th:block th:include="index :: scripts"></th:block> /*/-->
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}">Cron Web Interface</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Cron Job Scheduler - Friendly UI</h3>
+            <form method="POST">
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label for="script">Script to execute:</label><br/>
+                        <textarea class="form-control" name="script" cols="60" rows="14"></textarea><br/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label>When to execute:</label>
+                        <div class="radio">
+                            <label><input type="radio" checked="checked" name="option"
+                                        th:value="${T(com.skurski.cron.model.FriendlyOption).INTERVAL}"/>Every:</label>
+                            <div class="form-group">
+                                <select class="form-control" name="interval">
+                                    <option value="" th:disabled="disabled"
+                                            th:selected="selected">Choose an interval
+                                    </option>
+                                    <option th:each="state : ${T(com.skurski.cron.model.Interval).values()}"
+                                            th:value="${state}"
+                                            th:text="${state.desc}"/>
+                                </select>
+                            </div>
+                            <label><input type="radio" name="option"
+                                th:value="${T(com.skurski.cron.model.FriendlyOption).HOUR}"/>At specific hour:</label>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker3'>
+                                    <input type='text' class="form-control" name="hour"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+
+                                <div class="form-group hour-option">
+                                    <label class="radio-inline"><input type="radio" name="occurence" checked="checked"
+                                            th:value="${T(com.skurski.cron.model.HourOccurence).ONCE}"
+                                            th:text="${T(com.skurski.cron.model.HourOccurence).ONCE.getDesc()}"/>
+                                    </label>
+                                    <label class="radio-inline"><input type="radio" name="occurence"
+                                           th:value="${T(com.skurski.cron.model.HourOccurence).EVERY_DAY}"
+                                           th:text="${T(com.skurski.cron.model.HourOccurence).EVERY_DAY.getDesc()}"/>
+                                    </label>
+                                    <label class="radio-inline"><input type="radio" name="occurence"
+                                           th:value="${T(com.skurski.cron.model.HourOccurence).EVERY_WEEK}"
+                                           th:text="${T(com.skurski.cron.model.HourOccurence).EVERY_WEEK.getDesc()}"/>
+                                    </label>
+                                    <label class="radio-inline"><input type="radio" name="occurence"
+                                           th:value="${T(com.skurski.cron.model.HourOccurence).EVERY_MONTH}"
+                                           th:text="${T(com.skurski.cron.model.HourOccurence).EVERY_MONTH.getDesc()}"/>
+                                    </label>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker3').datetimepicker({
+                                        format: 'HH:mm'
+                                    });
+                                });
+                            </script>
+                            <label><input type="radio" name="option"
+                                  th:value="${T(com.skurski.cron.model.FriendlyOption).DATE_TIME}"/>At specific date and time:</label>
+                            <div class="form-group">
+                                <div class='input-group date' id='datetimepicker1'>
+                                    <input type='text' class="form-control" name="dateTime"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker1').datetimepicker({
+                                        format: 'DD-MM-YYYY HH:mm'
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <input type="submit" class="btn btn-success"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer th:fragment="footer">
+        <p>Piotr Skurski &copy; 2016 Cron Web Interface - ASK</p>
+    </footer>
+
+</div> <!-- /container -->
+
+</body>
+</html>

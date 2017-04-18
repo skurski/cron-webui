@@ -1,10 +1,9 @@
 package com.skurski.cron.service;
 
-import com.skurski.cron.model.Cron;
+import com.skurski.cron.model.ExpertCron;
 import com.skurski.cron.model.CronDto;
-import com.skurski.cron.model.Crontab;
+import com.skurski.cron.model.FriendlyCron;
 import com.skurski.cron.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -37,8 +36,8 @@ public class CronService {
         return cronJobs;
     }
 
-    public void addCronJob(Cron cron) {
-        Function<Cron, String> converter = (cronJob) -> {
+    public void addCronJob(ExpertCron expertCron) {
+        Function<ExpertCron, String> converter = (cronJob) -> {
             StringBuilder sb = new StringBuilder();
             if (cronJob.isEmpty()) {
                 // todo: inform client that no script to execute
@@ -53,19 +52,43 @@ public class CronService {
             return sb.append(cronJob.getParamsWithScript()).toString();
         };
 
-        String cronJob = converter.apply(cron);
+        String cronJob = converter.apply(expertCron);
+        File file = StringUtil.appendToFile(CRON_CRONTAB_TXT, cronJob);
+        executeShellCommand(CRONTAB + file.getAbsolutePath());
+    }
+
+    public void addCronJob(FriendlyCron friendlyCron) {
+        Function<FriendlyCron, String> converter = (cronJob) -> {
+            StringBuilder sb = new StringBuilder();
+            if (cronJob.isEmpty()) {
+                // todo: inform client that no script to execute
+                return sb.toString();
+            }
+            System.out.println("cronjob: " + cronJob);
+
+            return friendlyCron.getCommand();
+        };
+
+        String cronJob = converter.apply(friendlyCron);
         File file = StringUtil.appendToFile(CRON_CRONTAB_TXT, cronJob);
         executeShellCommand(CRONTAB + file.getAbsolutePath());
     }
 
     public void resetCrontab() {
-        File file = StringUtil.getFile(CRON_RESET_TXT);
-        executeShellCommand(CRONTAB + file.getAbsolutePath());
+        File resetFile = StringUtil.getFile(CRON_RESET_TXT);
+        executeShellCommand(CRONTAB + resetFile.getAbsolutePath());
         StringUtil.resetFile(CRON_CRONTAB_TXT);
     }
 
-    public void removeCronJob() {
-        // todo: implement
+    public void removeCronJob(CronDto cronDto) {
+        String crontab = executeShellCommand(CRONTAB_LIST);
+        String newCrontab = StringUtil.remove(crontab, cronDto.getRow());
+        if (newCrontab.isEmpty()) {
+            resetCrontab();
+            return;
+        }
+        File cronFile = StringUtil.putToFile(CRON_CRONTAB_TXT, newCrontab);
+        executeShellCommand(CRONTAB + cronFile.getAbsolutePath());
     }
 
     private String executeShellCommand(String command) {

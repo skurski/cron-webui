@@ -1,75 +1,55 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head lang="en" th:fragment="head">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
     <title>Cron WebUI</title>
-    <link rel="stylesheet" th:href="@{/style.css}"></link>
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="bootstrap/css/bs-datepicker.min.css" rel="stylesheet"/>
+    <!-- Application core CSS -->
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 
 <body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}">Cron Web Interface</a>
+        </div>
+    </div>
+</div>
+
 <div class="container">
-<h2>See your crontab file</h2>
-<div class="display">
-    <div th:if="${#lists.isEmpty(crontab)}">
-        <p>Your crontab file is empty. Nothing to show.</p>
+    <div class="row index-list">
+        <div class="col-md-12">
+            <div class="list-group">
+                <a th:href="@{/expert}" class="list-group-item">Expert Interface</a>
+                <a th:href="@{/friendly}" class="list-group-item">User Friendly Interface</a>
+                <a th:href="@{/job-list}" class="list-group-item">Cron Job List</a>
+            </div>
+        </div>
     </div>
-    <div th:if="${not #lists.isEmpty(crontab)}">
-        <table>
-            <tbody th:each="job : ${crontab}">
-                <tr>
-                    <td>
-                        <p th:text="${job.row}">Description</p>
-                    </td>
-                    <td>
-                        <form th:action="@{/remove}" method="post">
-                            <input type="hidden" name="jobId" th:value="${job.id}"/>
-                            <input type="submit" value="Remove job"/>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div>
-        <form th:action="@{/reset}" method="post">
-            <input type="submit" value="Reset crontab"/>
-        </form>
-    </div>
-</div>
-<hr/>
 
-<h3>Add a cron job</h3>
-<form method="POST">
-    <label for="script">Script to execute:</label><br/>
-        <textarea name="script" cols="80" rows="10"></textarea><br/>
-    <label for="minute">Minute:</label>
-    <input type="text" name="minute" size="10" value="*"></input>
-    &nbsp;(0-59)<br/>
-    <label for="hour">Hour:</label>
-    <input type="text" name="hour" size="10" value="*"></input>
-    &nbsp;(0-23)<br/>
-    <label for="dayOfMonth">Day of month:</label>
-    <input type="text" name="dayOfMonth" size="10" value="*"></input>
-    &nbsp;(1-31)<br/>
-    <label for="month">Month:</label>
-    <input type="text" name="month" size="10" value="*"></input>
-    &nbsp;(1-12)<br/>
-    <label for="dayOfWeek">Day of week:</label>
-    <input type="text" name="dayOfWeek" size="10" value="*"></input>
-    &nbsp;(0-6)<br/>
+    <footer th:fragment="footer">
+        <p>Piotr Skurski &copy; 2016 Cron Web Interface - ASK</p>
+    </footer>
 
-    <p>If you choose cron annotation the above configuration will be ignored!</p>
-    <label for="special">Special cron annotation: </label>
-    <select name="special">
-        <option value="" th:disabled="disabled"
-                th:selected="selected">Choose your option</option>
-        <option th:each="state : ${T(com.skurski.cron.model.Special).values()}"
-                th:value="${state}"
-                th:text="${state}">
-        </option>
-    </select>
-    <br/><br/>
+</div> <!-- /container -->
 
-    <input type="submit"></input>
-</form>
-</div>
+<!--/*/ <th:block th:fragment="scripts">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bootstrap/js/moment.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="bootstrap/js/bs-datepicker.min.js"></script>
+</th:block> /*/-->
+
 </body>
 </html>

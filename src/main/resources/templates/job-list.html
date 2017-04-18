@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head lang="en">
+    <!--/*/ <th:block th:include="index :: head"></th:block> /*/-->
+    <title>Cron Job Scheduler - Expert UI</title>
+    <!--/*/ <th:block th:include="index :: scripts"></th:block> /*/-->
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}">Cron Web Interface</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Cron Job List</h3>
+            <div th:if="${#lists.isEmpty(crontab)}">
+                <p>Your crontab file is empty. Nothing to show.</p>
+            </div>
+            <div th:if="${not #lists.isEmpty(crontab)}">
+                <table class="table table-striped">
+                    <tbody>
+                    <tr th:each="job : ${crontab}">
+                        <td class="col-md-10">
+                            <p th:text="${job.row}">Description</p>
+                        </td>
+                        <td class="col-md-2">
+                            <form th:action="@{/job-list/remove}" method="post">
+                                <input type="hidden" name="id" th:value="${job.id}"/>
+                                <input type="hidden" name="row" th:value="${job.row}"/>
+                                <input type="submit" class="btn btn-warning" value="Remove job"/>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <form th:action="@{/job-list/reset}" method="post">
+                    <input type="submit" class="btn btn-danger" value="Reset crontab"/>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:fragment="footer">
+        <p>Piotr Skurski &copy; 2016 Cron Web Interface - ASK</p>
+    </footer>
+
+</div> <!-- /container -->
+
+</body>
+</html>
