@@ -4,6 +4,7 @@ import java.util.Optional;
 
 /**
  * User friendly cron object.
+ *
  */
 public class FriendlyCron {
 
@@ -11,13 +12,19 @@ public class FriendlyCron {
 
     private Optional<Interval> interval = Optional.empty();
 
+    private Optional<DayInterval> dayInterval = Optional.empty();
+
     private FriendlyOption option;
 
-    private Optional<String> hour = Optional.empty();
+    private Optional<String> hourWeekly = Optional.empty();
 
-    private Optional<HourOccurence> occurence = Optional.empty();
+    private Optional<String> hourDaily = Optional.empty();
 
-    private Optional<String> dateTime = Optional.empty();
+    private Optional<String> hourMonthly = Optional.empty();
+
+    private Optional<String> dayOfWeek = Optional.empty();
+
+    private Optional<String> dayOfMonth = Optional.empty();
 
     public FriendlyCron() {}
 
@@ -45,42 +52,76 @@ public class FriendlyCron {
         this.option = option;
     }
 
-    public Optional<String> getHour() {
-        return hour;
+    public Optional<String> getHourWeekly() {
+        return hourWeekly;
     }
 
-    public void setHour(Optional<String> hour) {
-        this.hour = hour;
+    public void setHourWeekly(Optional<String> hourWeekly) {
+        this.hourWeekly = hourWeekly;
+    }
+
+    public Optional<String> getHourDaily() {
+        return hourDaily;
+    }
+
+    public void setHourDaily(Optional<String> hourDaily) {
+        this.hourDaily = hourDaily;
     }
 
     public boolean isEmpty() {
         return script.isEmpty();
     }
 
-    public Optional<HourOccurence> getOccurence() {
-        return occurence;
+    public Optional<DayInterval> getDayInterval() {
+        return dayInterval;
     }
 
-    public void setOccurence(Optional<HourOccurence> occurence) {
-        this.occurence = occurence;
+    public void setDayInterval(Optional<DayInterval> dayInterval) {
+        this.dayInterval = dayInterval;
     }
 
-    public Optional<String> getDateTime() {
-        return dateTime;
+    public Optional<String> getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setDateTime(Optional<String> dateTime) {
-        this.dateTime = dateTime;
+    public void setDayOfWeek(Optional<String> dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public Optional<String> getHourMonthly() {
+        return hourMonthly;
+    }
+
+    public void setHourMonthly(Optional<String> hourMonthly) {
+        this.hourMonthly = hourMonthly;
+    }
+
+    public Optional<String> getDayOfMonth() {
+        return dayOfMonth;
+    }
+
+    public void setDayOfMonth(Optional<String> dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
     }
 
     public String getCommand() {
-        if (option == FriendlyOption.INTERVAL) {
+        if (option == FriendlyOption.INTERVAL_HOURLY && interval.isPresent()) {
             return interval.get().getParameter() + " " + script;
         }
-        if (option == FriendlyOption.HOUR) {
-            return "";
+        if (option == FriendlyOption.HOUR_DAILY && dayInterval.isPresent()) {
+            String[] time = hourDaily.get().split(":");
+            dayInterval.get().setHour(time[0]);
+            dayInterval.get().setMinute(time[1]);
+            return dayInterval.get().getParameter() + " " + script;
         }
-        // FriendlyOption.DATE_TIME
+        if (option == FriendlyOption.TIME_AND_DAY_WEEKLY && hourWeekly.isPresent()) {
+            String[] time = hourWeekly.get().split(":");
+            return time[1] + " " + time[0] + " *" + " * " + dayOfWeek.get() + " " + script;
+        }
+        if (option == FriendlyOption.TIME_AND_DATE_MONTHLY && hourMonthly.isPresent()) {
+            String[] time = hourMonthly.get().split(":");
+            return time[1] + " " + time[0] + " " + dayOfMonth.get() + " * * " + script;
+        }
         return "";
     }
 
@@ -89,7 +130,13 @@ public class FriendlyCron {
         return "FriendlyCron{" +
                 "script='" + script + '\'' +
                 ", interval=" + interval +
+                ", dayInterval=" + dayInterval +
                 ", option=" + option +
+                ", hourWeekly=" + hourWeekly +
+                ", hourDaily=" + hourDaily +
+                ", hourMonthly=" + hourMonthly +
+                ", dayOfWeek=" + dayOfWeek +
+                ", dayOfMonth=" + dayOfMonth +
                 '}';
     }
 }

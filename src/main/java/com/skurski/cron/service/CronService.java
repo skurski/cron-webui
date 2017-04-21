@@ -53,6 +53,9 @@ public class CronService {
         };
 
         String cronJob = converter.apply(expertCron);
+        if (cronJob.isEmpty()) {
+            return;
+        }
         File file = StringUtil.appendToFile(CRON_CRONTAB_TXT, cronJob);
         executeShellCommand(CRONTAB + file.getAbsolutePath());
     }
@@ -70,6 +73,9 @@ public class CronService {
         };
 
         String cronJob = converter.apply(friendlyCron);
+        if (cronJob.isEmpty()) {
+            return;
+        }
         File file = StringUtil.appendToFile(CRON_CRONTAB_TXT, cronJob);
         executeShellCommand(CRONTAB + file.getAbsolutePath());
     }
